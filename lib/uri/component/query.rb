@@ -9,8 +9,9 @@ module URI
 	@params.default_proc = Proc.new {|hash, key|
 	  hash[key] = [] unless hash.key?(key)
 	}
+	@param_separator = '&'
 
-	query_str.split('&').each do |param|
+	query_str.split(/[&;]/).each do |param|
 	  next if param.empty?
 	  name, value = param.split('=', 2).map do |v|
 	    CGI.unescape(v)
@@ -24,7 +25,15 @@ module URI
 	return @params
       end
 
-      def to_uri
+      def param_separator
+	return @param_separator
+      end
+
+      def param_separator=(v)
+	@param_separator = v
+      end
+
+      def to_uri(separator=@param_separator)
 	query = []
 
 	@params.each do |name, values|
@@ -34,7 +43,7 @@ module URI
 	  end
 	end
 
-	return query.join('&')
+	return query.join(separator)
       end
       alias to_s to_uri
     end

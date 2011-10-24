@@ -65,6 +65,15 @@ class TestQueryClass < Test::Unit::TestCase
     assert_nil(q.params['bar'][0])
     assert_equal(1, q.params['baz'].size)
     assert_equal('a', q.params['baz'][0])
+
+    q = UCQ.new('foo=1;bar=abc;baz=ABC')
+    assert_equal(3, q.params.size)
+    assert_equal(1, q.params['foo'].size)
+    assert_equal('1', q.params['foo'][0])
+    assert_equal(1, q.params['bar'].size)
+    assert_equal('abc', q.params['bar'][0])
+    assert_equal(1, q.params['baz'].size)
+    assert_equal('ABC', q.params['baz'][0])
   end
 
   def test_set
@@ -100,6 +109,12 @@ class TestQueryClass < Test::Unit::TestCase
     q.params['bar'] = [nil]
     q.params['baz'] = ['a']
     assert_equal('foo=1&foo&bar&baz=a', q.to_uri)
+
+    q = UCQ.new('')
+    q.params['foo'] = [1]
+    q.params['bar'] = ['abc']
+    q.params['baz'] = ['ABC']
+    assert_equal('foo=1;bar=abc;baz=ABC', q.to_uri(';'))
   end
 end
 
