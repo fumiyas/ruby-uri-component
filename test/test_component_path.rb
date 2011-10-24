@@ -57,6 +57,14 @@ class TestPathClass < Test::Unit::TestCase
     assert_equal('bar-abc@xyz', p.nodes[1])
     assert_equal("baz-123 \x00+789", p.nodes[2])
 
+    p_uri = '/foo//bar'
+    p = UCP.new(p_uri)
+    assert_equal(p_uri, p.to_uri)
+    assert_equal(3, p.nodes.size)
+    assert_equal('foo', p.nodes[0])
+    assert_equal('', p.nodes[1])
+    assert_equal('bar', p.nodes[2])
+
     %w(foo1 /foo?bar2 /foo\bar3).concat(['/foo bar4']).each do |path_str|
       assert_raise(URI::InvalidURIError) do
 	UCP.new(path_str)

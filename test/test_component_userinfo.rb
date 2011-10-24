@@ -48,9 +48,10 @@ class TestUserInfoClass < Test::Unit::TestCase
     assert_equal('user name', i.user)
     assert_equal('p@ssword', i.password)
 
-    %w(foo/bar1 foo@bar2 foo?bar3 foo:bar:baz4 foo;bar;baz5).each do |info|
+    %w(foo/bar1 foo@bar2 foo?bar3 foo:bar:baz4 foo;bar;baz5).each do |info_str|
       assert_raise(URI::InvalidURIError) do
-	UCUI.new(info)
+	UCUI.new(info_str)
+	raise info_str
       end
     end
   end
