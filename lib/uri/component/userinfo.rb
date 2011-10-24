@@ -6,10 +6,10 @@ module URI
       RE_UNSAFE = /[^#{URI::REGEXP::PATTERN::UNRESERVED}]/
       RE_PART = /(?:[#{URI::REGEXP::PATTERN::UNRESERVED}&=+$,]|#{URI::REGEXP::PATTERN::ESCAPED})*/
 
-      def initialize(info=nil)
-	if info
-	  unless info =~ /^(?:(#{RE_PART});)?(#{RE_PART})(?::(#{RE_PART}))?$/
-	    raise InvalidURIError, "bad UserInfo component for URI: #{info}"
+      def initialize(info_str=nil)
+	if info_str
+	  unless info_str =~ /^(?:(#{RE_PART});)?(#{RE_PART})(?::(#{RE_PART}))?$/
+	    raise InvalidURIError, "bad UserInfo component for URI: #{info_str}"
 	  end
 	  @domain = $1 ? URI.unescape($1) : nil
 	  @user = URI.unescape($2)
@@ -55,11 +55,11 @@ module URI
       def to_uri
 	return '' unless @user
 
-	userinfo = ''
-	userinfo += URI.escape(@domain, RE_UNSAFE) + ';' if @domain
-	userinfo += @user ? URI.escape(@user, RE_UNSAFE) : '';
-	userinfo += ':' + URI.escape(@password, RE_UNSAFE) if @password
-	return userinfo
+	info_str = ''
+	info_str += URI.escape(@domain, RE_UNSAFE) + ';' if @domain
+	info_str += @user ? URI.escape(@user, RE_UNSAFE) : '';
+	info_str += ':' + URI.escape(@password, RE_UNSAFE) if @password
+	return info_str
       end
       alias to_s to_uri
     end
