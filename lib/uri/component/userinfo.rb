@@ -53,7 +53,7 @@ module URI
       end
 
       def to_uri
-	return '' unless @user
+	return nil unless @user
 
 	info_str = ''
 	info_str += URI.escape(@domain, RE_UNSAFE) + ';' if @domain

@@ -15,27 +15,36 @@ class TestUserInfoClass < Test::Unit::TestCase
 
   def test_parse
     i = UCUI.new()
+    assert_nil(i.to_uri)
     assert_nil(i.domain)
     assert_nil(i.user)
     assert_nil(i.password)
 
-    i = UCUI.new('user%20name')
+    i_uri = 'user%20name'
+    i = UCUI.new(i_uri)
+    assert_equal(i_uri, i.to_uri)
     assert_nil(i.domain)
     assert_equal('user name', i.user)
     assert_nil(i.password)
 
-    i = UCUI.new('user%20name:p%40ssword')
+    i_uri = 'user%20name:p%40ssword'
+    i = UCUI.new(i_uri)
+    assert_equal(i_uri, i.to_uri)
     assert_nil(i.domain)
     assert_equal('user name', i.user)
     assert_equal('p@ssword', i.password)
 
-    i = UCUI.new('domain%5Fname;user%20name')
-    assert_equal('domain_name', i.domain)
+    i_uri = 'domain%20name;user%20name'
+    i = UCUI.new(i_uri)
+    assert_equal(i_uri, i.to_uri)
+    assert_equal('domain name', i.domain)
     assert_equal('user name', i.user)
     assert_nil(i.password)
 
-    i = UCUI.new('domain%5Fname;user%20name:p%40ssword')
-    assert_equal('domain_name', i.domain)
+    i_uri = 'domain%20name;user%20name:p%40ssword'
+    i = UCUI.new(i_uri)
+    assert_equal(i_uri, i.to_uri)
+    assert_equal('domain name', i.domain)
     assert_equal('user name', i.user)
     assert_equal('p@ssword', i.password)
 
@@ -76,7 +85,7 @@ class TestUserInfoClass < Test::Unit::TestCase
     assert_equal('domain%20%2520_3;user2:password%20%2520_3', i.to_uri)
     i.user = nil
     assert_nil(i.user)
-    assert_equal('', i.to_uri)
+    assert_nil(i.to_uri)
 
     assert_raise(URI::InvalidURIError) do
       i.domain = 'domain4'
