@@ -99,6 +99,45 @@ class TestUserInfoClass < Test::Unit::TestCase
     assert_equal('user %20_3', i.user)
     assert_equal('user%20%2520_3', i.to_uri)
   end
+
+  def test_mixin
+    UCUI.mixin(URI::HTTP)
+
+    u_uri = 'http://user%20name:p%40ssword@example.jp/'
+    u = URI.parse(u_uri)
+    i = u.userinfo_component
+    assert_kind_of(UCUI, i)
+    assert_equal('user%20name:p%40ssword', u.userinfo)
+    assert_equal('user%20name', u.user)
+    assert_equal('user name', i.user)
+    assert_equal('p%40ssword', u.password)
+    assert_equal('p@ssword', i.password)
+    assert_nil(i.domain)
+
+    u.user = 'user%2Fname'
+    assert_equal('user%2Fname:p%40ssword', u.userinfo)
+    assert_equal('user%2Fname', u.user)
+    assert_equal('user/name', i.user)
+    assert_nil(i.domain)
+
+    u.password = 'pass%2Fword'
+    assert_equal('user%2Fname:pass%2Fword', u.userinfo)
+    assert_equal('pass%2Fword', u.password)
+    assert_equal('pass/word', i.password)
+    assert_nil(i.domain)
+
+    u.user = 'domain;user%3Bname'
+    assert_equal('domain;user%3Bname:pass%2Fword', u.userinfo)
+    assert_equal('domain;user%3Bname', u.user)
+    assert_equal('domain', i.domain)
+    assert_equal('user;name', i.user)
+
+    u_uri = 'ftp://username:password@example.jp/'
+    u = URI.parse(u_uri)
+    assert_raise(NoMethodError) do
+      u.userinfo_component
+    end
+  end
 end
 
 end
