@@ -5,8 +5,8 @@ module URI
   module Component
     class Query
       def initialize(query_str='')
-	@query_params = {}
-	@query_params.default_proc = Proc.new {|hash, key|
+	@params = {}
+	@params.default_proc = Proc.new {|hash, key|
 	  hash[key] = [] unless hash.key?(key)
 	}
 
@@ -15,19 +15,19 @@ module URI
 	  name, value = param.split('=', 2).map do |v|
 	    CGI.unescape(v)
 	  end
-	  @query_params[name] ||= []
-	  @query_params[name] << value ? value : nil
+	  @params[name] ||= []
+	  @params[name] << value ? value : nil
 	end
       end
 
       def params
-	return @query_params
+	return @params
       end
 
       def to_uri
 	query = []
 
-	@query_params.each do |name, values|
+	@params.each do |name, values|
 	  name = CGI.escape(name)
 	  values.each do |value|
 	    query << "#{name}#{'=' + CGI.escape(value.to_s) if value}"
