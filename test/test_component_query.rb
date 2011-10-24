@@ -69,19 +69,19 @@ class TestQueryClass < Test::Unit::TestCase
 
   def test_set
     q = UCQ.new('')
-    q.params['foo'] = [1];
+    q.params['foo'] = [1]
     assert_equal('foo=1', q.to_uri)
 
     q = UCQ.new('')
-    q.params['foo'] = [nil];
+    q.params['foo'] = [nil]
     assert_equal('foo', q.to_uri)
 
     q = UCQ.new('')
-    q.params['foo'] = ['123 abc'];
+    q.params['foo'] = ['123 abc']
     assert_equal('foo=123+abc', q.to_uri)
 
     q = UCQ.new('')
-    q.params['foo'] = ['123+abc'];
+    q.params['foo'] = ['123+abc']
     assert_equal('foo=123%2Babc', q.to_uri)
 
     q = UCQ.new('')
