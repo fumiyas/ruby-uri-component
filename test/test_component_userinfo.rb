@@ -76,7 +76,7 @@ class TestUserInfoClass < Test::Unit::TestCase
     assert_equal('domain%20%2520_3;user2:password%20%2520_3', i.to_uri)
     i.user = nil
     assert_nil(i.user)
-    assert_nil(i.to_uri)
+    assert_equal('', i.to_uri)
 
     assert_raise(URI::InvalidURIError) do
       i.domain = 'domain4'
