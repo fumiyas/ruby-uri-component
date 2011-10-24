@@ -83,7 +83,7 @@ module URI
       end
 
       def userinfo
-	self.userinfo_component.to_uri
+	@userinfo_component.to_uri
       end
 
       def userinfo=(info_str)
@@ -94,10 +94,10 @@ module URI
       end
 
       def user
-	user = self.userinfo_component.user
+	user = @userinfo_component.user
 	return nil unless user
 
-	domain = self.userinfo_component.domain
+	domain = @userinfo_component.domain
 	user_uri = domain ? URI::Component::UserInfo.escape(domain) + ';' : ''
 	user_uri += URI::Component::UserInfo.escape(user)
 	return user_uri
@@ -106,26 +106,27 @@ module URI
       def user=(user_uri)
 	if user_uri
 	  m = user_uri.match(/^(?:(.*);)?(.*)$/)
-	  self.userinfo_component.domain = m[1] ? URI.unescape(m[1]) : nil
-	  self.userinfo_component.user = URI.unescape(m[2])
+	  @userinfo_component.domain = m[1] ? URI.unescape(m[1]) : nil
+	  @userinfo_component.user = URI.unescape(m[2])
 	else
-	  self.userinfo_component.user = nil
+	  @userinfo_component.user = nil
 	end
       end
 
       def password
-	pass = self.userinfo_component.password
+	pass = @userinfo_component.password
 	return pass ? URI::Component::UserInfo.escape(pass) : nil
       end
 
       def password=(pass_uri)
-	self.userinfo_component.password = pass_uri ? URI.unescape(pass_uri) : nil
+	@userinfo_component.password = pass_uri ? URI.unescape(pass_uri) : nil
       end
 
       def userinfo_component
 	parse_userinfo! unless @userinfo_component
 	return @userinfo_component
       end
+      alias userinfo_c userinfo_component
 
       protected
 

@@ -69,7 +69,7 @@ module URI
       end
 
       def query
-	self.query_component.to_uri
+	@query_component.to_uri
       end
 
       def query=(query_str)
@@ -83,6 +83,7 @@ module URI
 	parse_query! unless @query_component
 	return @query_component
       end
+      alias query_c query_component
 
       protected
 
