@@ -6,6 +6,11 @@ module URI
     class Path
       RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::ABS_PATH})?$/
 
+      def self.mixin(c=URI::Generic)
+	PathMixin.__send__(:append_features, c)
+	PathMixin.__send__(:included, c)
+      end
+
       def initialize(path_str='')
 	unless path_str =~ RE_COMPONENT
 	  raise InvalidURIError, "bad Path component for URI: #{path_str}"
@@ -53,6 +58,39 @@ module URI
 	end
 
 	@nodes = nodes
+      end
+    end
+
+    module PathMixin
+      def initialize_copy(uri)
+	if (path = uri.instance_variable_get('@path_component'))
+	  @path_component = path.dup
+	end
+
+	super(uri)
+      end
+
+      def path
+	@path_component.to_uri
+      end
+
+      def path=(path_str)
+	super(path_str)
+
+	parse_path!
+	return self.path
+      end
+
+      def path_component
+	parse_path! unless @path_component
+	return @path_component
+      end
+      alias path_c path_component
+
+      protected
+
+      def parse_path!
+	@path_component = URI::Component::Path.new(@path)
       end
     end
   end

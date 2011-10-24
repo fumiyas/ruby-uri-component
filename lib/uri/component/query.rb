@@ -73,10 +73,10 @@ module URI
       end
 
       def query=(query_str)
-	query_str = super(query_str)
+	super(query_str)
 
 	parse_query!
-	return self.query.to_s
+	return self.query
       end
 
       def query_component

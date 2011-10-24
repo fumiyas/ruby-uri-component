@@ -132,6 +132,24 @@ class TestPathClass < Test::Unit::TestCase
     p.normalize!
     assert_equal('/foo/bar', p.to_uri)
   end
+
+  def test_mixin
+    UCP.mixin(URI::HTTP)
+
+    u_uri = 'http://example.jp/foo-123%40example/bar-abc%20xyz'
+    u = URI.parse(u_uri)
+    p = u.path_component
+    assert_kind_of(UCP, p)
+    assert_equal(u_uri, u.to_s)
+    assert_equal('/foo-123%40example/bar-abc+xyz', u.path)
+    assert_equal('/foo-123%40example/bar-abc+xyz', p.to_s)
+
+    u_uri = 'ftp://example.jp/foo'
+    u = URI.parse(u_uri)
+    assert_raise(NoMethodError) do
+      u.path_component
+    end
+  end
 end
 
 end
