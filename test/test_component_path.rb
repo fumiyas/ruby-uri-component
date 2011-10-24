@@ -102,6 +102,36 @@ class TestPathClass < Test::Unit::TestCase
     p.nodes << "123 \x00+789"
     assert_equal('/abc%40xyz/123+%00%2B789', p.to_uri)
   end
+
+  def test_normalize
+    p = UCP.new('/foo/')
+    p.normalize!
+    assert_equal('/foo', p.to_uri)
+
+    p = UCP.new('/foo/./bar')
+    p.normalize!
+    assert_equal('/foo/bar', p.to_uri)
+
+    p = UCP.new('/foo/./bar/baz/.')
+    p.normalize!
+    assert_equal('/foo/bar/baz', p.to_uri)
+
+    p = UCP.new('/foo/../bar')
+    p.normalize!
+    assert_equal('/bar', p.to_uri)
+
+    p = UCP.new('/foo/../../../bar')
+    p.normalize!
+    assert_equal('/bar', p.to_uri)
+
+    p = UCP.new('/foo/./../bar')
+    p.normalize!
+    assert_equal('/bar', p.to_uri)
+
+    p = UCP.new('/foo//bar')
+    p.normalize!
+    assert_equal('/foo/bar', p.to_uri)
+  end
 end
 
 end

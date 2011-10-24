@@ -21,10 +21,6 @@ module URI
 	end
       end
 
-      def nodes
-	return @nodes
-      end
-
       def to_uri
 	return '' if @nodes.empty?
 	return '/' + @nodes.map do |node|
@@ -32,6 +28,32 @@ module URI
 	end.join('/')
       end
       alias to_s to_uri
+
+      def nodes
+	return @nodes
+      end
+
+      def nodes=(v)
+	@nodes = v
+      end
+
+      def normalize!
+	nodes = []
+	@nodes.each do |node|
+	  case node
+	  when ''
+	    next
+	  when '.'
+	    next
+	  when '..'
+	    nodes.pop
+	    next
+	  end
+	  nodes << node
+	end
+
+	@nodes = nodes
+      end
     end
   end
 end
