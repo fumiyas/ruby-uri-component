@@ -3,8 +3,14 @@ require 'cgi'
 
 module URI
   module Component
+    RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::QUERY})?$/
+
     class Query
       def initialize(query_str='')
+	unless query_str =~ RE_COMPONENT
+	  raise InvalidURIError, "bad Query component for URI: #{query_str}"
+	end
+
 	@params = {}
 	@params.default_proc = Proc.new {|hash, key|
 	  hash[key] = [] unless hash.key?(key)

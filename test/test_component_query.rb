@@ -74,6 +74,10 @@ class TestQueryClass < Test::Unit::TestCase
     assert_equal('abc', q.params['bar'][0])
     assert_equal(1, q.params['baz'].size)
     assert_equal('ABC', q.params['baz'][0])
+
+    assert_raise(URI::InvalidURIError) do
+      UCQ.new('foo bar')
+    end
   end
 
   def test_set
