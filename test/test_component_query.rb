@@ -139,6 +139,43 @@ class TestQueryClass < Test::Unit::TestCase
     q.params['baz'] = ['ABC']
     assert_equal('foo=1;bar=abc;baz=ABC', q.to_uri(';'))
   end
+
+  def test_mixin
+    UCQ.mixin(URI::HTTP)
+
+    u_uri = 'http://example.jp/?foo=123%40example&bar=abc%20xyz'
+    u = URI.parse(u_uri)
+    q = u.query_component
+    assert_kind_of(UCQ, q)
+    assert_equal(u_uri, u.to_s)
+    assert_equal('foo=123%40example&bar=abc+xyz', u.query)
+    assert_equal('foo=123%40example&bar=abc+xyz', q.to_s)
+
+    return
+    u.user = 'user%2Fname'
+    assert_equal('user%2Fname:p%40ssword', u.userinfo)
+    assert_equal('user%2Fname', u.user)
+    assert_equal('user/name', i.user)
+    assert_nil(i.domain)
+
+    u.password = 'pass%2Fword'
+    assert_equal('user%2Fname:pass%2Fword', u.userinfo)
+    assert_equal('pass%2Fword', u.password)
+    assert_equal('pass/word', i.password)
+    assert_nil(i.domain)
+
+    u.user = 'domain;user%3Bname'
+    assert_equal('domain;user%3Bname:pass%2Fword', u.userinfo)
+    assert_equal('domain;user%3Bname', u.user)
+    assert_equal('domain', i.domain)
+    assert_equal('user;name', i.user)
+
+    u_uri = 'ftp://username:password@example.jp/'
+    u = URI.parse(u_uri)
+    assert_raise(NoMethodError) do
+      u.userinfo_component
+    end
+  end
 end
 
 end

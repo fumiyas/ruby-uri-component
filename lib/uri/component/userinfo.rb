@@ -74,12 +74,12 @@ module URI
     end
 
     module UserInfoMixin
-      def initialize_copy(url)
-	if (userinfo = url.instance_variable_get('@userinfo_component'))
+      def initialize_copy(uri)
+	if (userinfo = uri.instance_variable_get('@userinfo_component'))
 	  @userinfo_component = userinfo.dup
 	end
 
-	super(url)
+	super(uri)
       end
 
       def userinfo
@@ -87,10 +87,10 @@ module URI
       end
 
       def userinfo=(info_str)
-	info_str = super(info_str)
+	super(info_str)
 
-	parse_userinfo! if @userinfo_component
-	return info_str
+	parse_userinfo!
+	return self.userinfo
       end
 
       def user
@@ -98,14 +98,14 @@ module URI
 	return nil unless user
 
 	domain = self.userinfo_component.domain
-	uri = domain ? URI::Component::UserInfo.escape(domain) + ';' : ''
-	uri += URI::Component::UserInfo.escape(user)
-	return uri
+	user_uri = domain ? URI::Component::UserInfo.escape(domain) + ';' : ''
+	user_uri += URI::Component::UserInfo.escape(user)
+	return user_uri
       end
 
-      def user=(v)
-	if v
-	  m = v.match(/^(?:(.*);)?(.*)$/)
+      def user=(user_uri)
+	if user_uri
+	  m = user_uri.match(/^(?:(.*);)?(.*)$/)
 	  self.userinfo_component.domain = m[1] ? URI.unescape(m[1]) : nil
 	  self.userinfo_component.user = URI.unescape(m[2])
 	else
@@ -114,12 +114,12 @@ module URI
       end
 
       def password
-	v = self.userinfo_component.password
-	return v ? URI::Component::UserInfo.escape(v) : nil
+	pass = self.userinfo_component.password
+	return pass ? URI::Component::UserInfo.escape(pass) : nil
       end
 
-      def password=(v)
-	self.userinfo_component.password = URI.unescape(v)
+      def password=(pass_uri)
+	self.userinfo_component.password = pass_uri ? URI.unescape(pass_uri) : nil
       end
 
       def userinfo_component

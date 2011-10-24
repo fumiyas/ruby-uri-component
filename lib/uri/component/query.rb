@@ -3,9 +3,14 @@ require 'cgi'
 
 module URI
   module Component
-    RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::QUERY})?$/
-
     class Query
+      RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::QUERY})?$/
+
+      def self.mixin(c=URI::Generic)
+	QueryMixin.__send__(:append_features, c)
+	QueryMixin.__send__(:included, c)
+      end
+
       def initialize(query_str='')
 	unless query_str =~ RE_COMPONENT
 	  raise InvalidURIError, "bad Query component for URI: #{query_str}"
@@ -52,6 +57,38 @@ module URI
 	return query.join(separator)
       end
       alias to_s to_uri
+    end
+
+    module QueryMixin
+      def initialize_copy(uri)
+	if (query = uri.instance_variable_get('@query_component'))
+	  @query_component = query.dup
+	end
+
+	super(uri)
+      end
+
+      def query
+	self.query_component.to_uri
+      end
+
+      def query=(query_str)
+	query_str = super(query_str)
+
+	parse_query!
+	return self.query.to_s
+      end
+
+      def query_component
+	parse_query! unless @query_component
+	return @query_component
+      end
+
+      protected
+
+      def parse_query!
+	@query_component = URI::Component::Query.new(@query)
+      end
     end
   end
 end
