@@ -4,7 +4,7 @@ module URI
   module Component
     class UserInfo
       RE_UNSAFE = /[^#{URI::REGEXP::PATTERN::UNRESERVED}]/
-      RE_PART = /(?:[#{URI::REGEXP::PATTERN::UNRESERVED}&=+$,]|#{URI::REGEXP::PATTERN::ESCAPED})*/o
+      RE_PART = /(?:[#{URI::REGEXP::PATTERN::UNRESERVED}&=+$,]|#{URI::REGEXP::PATTERN::ESCAPED})*/
 
       def initialize(info=nil)
 	if info
