@@ -141,9 +141,9 @@ class TestQueryClass < Test::Unit::TestCase
   end
 
   def test_mixin
-    UCQ.mixin(URI::HTTP)
+    UCQ.mixin(URI::HTTPS)
 
-    u_uri = 'http://example.jp/?foo=123%40example&bar=abc%20xyz'
+    u_uri = 'https://example.jp/?foo=123%40example&bar=abc%20xyz'
     u = URI.parse(u_uri)
     q = u.query_component
     assert_kind_of(UCQ, q)
@@ -151,11 +151,15 @@ class TestQueryClass < Test::Unit::TestCase
     assert_equal('foo=123%40example&bar=abc+xyz', u.query)
     assert_equal('foo=123%40example&bar=abc+xyz', q.to_s)
 
-    u_uri = 'ftp://username:password@example.jp/'
+    u_uri.sub!(/^https:/, 'http:')
     u = URI.parse(u_uri)
     assert_raise(NoMethodError) do
       u.query_component
     end
+
+    UCQ.mixin
+    u = URI.parse(u_uri)
+    assert_kind_of(UCQ, u.query_component)
   end
 end
 

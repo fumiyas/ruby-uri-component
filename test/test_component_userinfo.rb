@@ -101,9 +101,9 @@ class TestUserInfoClass < Test::Unit::TestCase
   end
 
   def test_mixin
-    UCUI.mixin(URI::HTTP)
+    UCUI.mixin(URI::HTTPS)
 
-    u_uri = 'http://user%20name:p%40ssword@example.jp/'
+    u_uri = 'https://user%20name:p%40ssword@example.jp/'
     u = URI.parse(u_uri)
     i = u.userinfo_component
     assert_kind_of(UCUI, i)
@@ -132,11 +132,15 @@ class TestUserInfoClass < Test::Unit::TestCase
     assert_equal('domain', i.domain)
     assert_equal('user;name', i.user)
 
-    u_uri = 'ftp://username:password@example.jp/'
+    u_uri.sub!(/^https:/, 'http:')
     u = URI.parse(u_uri)
     assert_raise(NoMethodError) do
       u.userinfo_component
     end
+
+    UCUI.mixin
+    u = URI.parse(u_uri)
+    assert_kind_of(UCUI, u.userinfo_component)
   end
 end
 
