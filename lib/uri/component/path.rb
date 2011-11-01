@@ -1,8 +1,16 @@
+## Ruby URI::Component::Path: Class to handle a path component in an URI
+##
+## Author:: SATOH Fumiyasu
+## Copyright:: (c) 2007-2011 SATOH Fumiyasu @ OSS Technology, Corp.
+## License:: You can redistribute it and/or modify it under the same term as Ruby.
+##
+
 require 'uri'
 require 'cgi'
 
 module URI
   module Component
+    ## Class to handle a path component in an URI
     class Path
       RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::ABS_PATH})?$/
 

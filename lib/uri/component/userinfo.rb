@@ -1,3 +1,10 @@
+## Ruby URI::Component::UserInfo: Class to handle an userinfo component in an URI
+##
+## Author:: SATOH Fumiyasu
+## Copyright:: (c) 2007-2011 SATOH Fumiyasu @ OSS Technology, Corp.
+## License:: You can redistribute it and/or modify it under the same term as Ruby.
+##
+
 require 'uri'
 
 module URI
