@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = URI::Component::VERSION
   s.authors     = ["SATOH Fumiyasu"]
   s.email       = ["fumiyas@osstech.co.jp"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/fumiyas/ruby-uri-component"
   s.summary     = %q{URI::Component::* classes}
   s.description = %q{Handle the components of the URI as an object}
 
