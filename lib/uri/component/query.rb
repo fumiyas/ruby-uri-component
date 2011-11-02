@@ -11,7 +11,7 @@ require 'cgi'
 module URI
   module Component
     class Query
-      RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::QUERY})?$/
+      RE_COMPONENT = /^#{URI::REGEXP::PATTERN::QUERY}?$/
 
       def self.mixin(c=URI::Generic)
 	QueryMixin.__send__(:append_features, c)
