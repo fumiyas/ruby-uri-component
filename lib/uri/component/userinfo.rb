@@ -10,8 +10,14 @@ require 'uri'
 module URI
   module Component
     class UserInfo
+      #:stopdoc:
       RE_UNSAFE = /[^#{URI::REGEXP::PATTERN::UNRESERVED}]/
-      RE_PART = /(?:[#{URI::REGEXP::PATTERN::UNRESERVED}&=+$,]|#{URI::REGEXP::PATTERN::ESCAPED})*/
+      ## Same as URI::USERINFO, except ';' and ':'
+      RE_PART = /(?:
+        [#{URI::REGEXP::PATTERN::UNRESERVED}&=+$,]|
+        #{URI::REGEXP::PATTERN::ESCAPED})*
+      /x
+      #:startdoc:
 
       def self.mixin(c=URI::Generic)
 	UserInfoMixin.__send__(:append_features, c)

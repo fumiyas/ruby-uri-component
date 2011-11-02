@@ -49,13 +49,13 @@ class TestPathClass < Test::Unit::TestCase
     assert_equal(1, p.nodes.size)
     assert_equal('123 abc+ABC', p.nodes[0])
 
-    p_uri = '/foo-1/bar-abc%40xyz/baz-123%20%00%2B789'
+    p_uri = '/foo-1/bar-abc%40xyz/baz-123%20%00%2B789%25ff'
     p = UCP.new(p_uri)
-    assert_equal('/foo-1/bar-abc%40xyz/baz-123+%00%2B789', p.to_uri)
+    assert_equal('/foo-1/bar-abc%40xyz/baz-123+%00%2B789%25ff', p.to_uri)
     assert_equal(3, p.nodes.size)
     assert_equal('foo-1', p.nodes[0])
     assert_equal('bar-abc@xyz', p.nodes[1])
-    assert_equal("baz-123 \x00+789", p.nodes[2])
+    assert_equal("baz-123 \x00+789%ff", p.nodes[2])
 
     p_uri = '/foo//bar'
     p = UCP.new(p_uri)
@@ -99,8 +99,8 @@ class TestPathClass < Test::Unit::TestCase
 
     p = UCP.new('')
     p.nodes << 'abc@xyz'
-    p.nodes << "123 \x00+789"
-    assert_equal('/abc%40xyz/123+%00%2B789', p.to_uri)
+    p.nodes << "123 \x00+789%ff"
+    assert_equal('/abc%40xyz/123+%00%2B789%25ff', p.to_uri)
   end
 
   def test_normalize
@@ -136,13 +136,14 @@ class TestPathClass < Test::Unit::TestCase
   def test_mixin
     UCP.mixin(URI::HTTPS)
 
-    u_uri = 'https://example.jp/foo-123%40example/bar-abc%20xyz'
+    u_uri = 'https://example.jp/abc%40xyz/123+%00%2B789%25ff'
     u = URI.parse(u_uri)
     p = u.path_component
+    assert_kind_of(URI::HTTPS, u)
     assert_kind_of(UCP, p)
     assert_equal(u_uri, u.to_s)
-    assert_equal('/foo-123%40example/bar-abc+xyz', u.path)
-    assert_equal('/foo-123%40example/bar-abc+xyz', p.to_s)
+    assert_equal('/abc%40xyz/123+%00%2B789%25ff', u.path)
+    assert_equal('/abc%40xyz/123+%00%2B789%25ff', p.to_s)
 
     u_uri.sub!(/^https:/, 'http:')
     u = URI.parse(u_uri)
@@ -152,7 +153,12 @@ class TestPathClass < Test::Unit::TestCase
 
     UCP.mixin
     u = URI.parse(u_uri)
+    p = u.path_component
+    assert_kind_of(URI::HTTP, u)
     assert_kind_of(UCP, u.path_component)
+    assert_equal(u_uri, u.to_s)
+    assert_equal('/abc%40xyz/123+%00%2B789%25ff', u.path)
+    assert_equal('/abc%40xyz/123+%00%2B789%25ff', p.to_s)
   end
 end
 
