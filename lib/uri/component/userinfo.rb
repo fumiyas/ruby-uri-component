@@ -17,6 +17,7 @@ module URI
         [#{URI::REGEXP::PATTERN::UNRESERVED}&=+$,]|
         #{URI::REGEXP::PATTERN::ESCAPED})*
       /x
+      RE_COMPONENT = /^(?:(#{RE_PART});)?(#{RE_PART})(?::(#{RE_PART}))?$/
       #:startdoc:
 
       def self.mixin(c=URI::Generic)
@@ -30,12 +31,12 @@ module URI
 
       def initialize(info_str=nil)
 	if info_str
-	  unless info_str =~ /^(?:(#{RE_PART});)?(#{RE_PART})(?::(#{RE_PART}))?$/
+	  unless m = info_str.match(RE_COMPONENT)
 	    raise InvalidURIError, "bad UserInfo component for URI: #{info_str}"
 	  end
-	  @domain = $1 ? URI.unescape($1) : nil
-	  @user = URI.unescape($2)
-	  @password = $3 ? URI.unescape($3) : nil
+	  @domain = m[1] ? URI.unescape(m[1]) : nil
+	  @user = URI.unescape(m[2])
+	  @password = m[3] ? URI.unescape(m[3]) : nil
 	else
 	  @domain = @user = @password = nil
 	end

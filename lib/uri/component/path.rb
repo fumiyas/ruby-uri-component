@@ -6,13 +6,20 @@
 ##
 
 require 'uri'
-require 'cgi'
 
 module URI
   module Component
     ## Class to handle a path component in an URI
     class Path
+      #:stopdoc:
+      ## Same as URI::UNSAFE, plus ';' (separator for path nodes)
+      ## and '?' (separator for path and query)
+      RE_UNSAFE = /
+        [^#{URI::REGEXP::PATTERN::UNRESERVED}#{URI::REGEXP::PATTERN::RESERVED}]|
+        [\/?]
+      /x
       RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::ABS_PATH})?$/
+      #:startdoc:
 
       def self.mixin(c=URI::Generic)
 	PathMixin.__send__(:append_features, c)
@@ -26,7 +33,7 @@ module URI
 
 	if path_str
 	  @nodes = path_str.split('/', -1).map do |node|
-	    CGI.unescape(node)
+	    URI.unescape(node)
 	  end
 	  @nodes.shift
 	else
@@ -37,7 +44,7 @@ module URI
       def to_uri
 	return '' if @nodes.empty?
 	return '/' + @nodes.map do |node|
-	  CGI.escape(node)
+	  URI.escape(node, RE_UNSAFE)
 	end.join('/')
       end
       alias to_s to_uri

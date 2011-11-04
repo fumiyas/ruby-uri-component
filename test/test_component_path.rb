@@ -39,19 +39,19 @@ class TestPathClass < Test::Unit::TestCase
 
     p_uri = '/123%20abc'
     p = UCP.new(p_uri)
-    assert_equal('/123+abc', p.to_uri)
+    assert_equal('/123%20abc', p.to_uri)
     assert_equal(1, p.nodes.size)
     assert_equal('123 abc', p.nodes[0])
 
     p_uri = '/123+abc%2BABC'
     p = UCP.new(p_uri)
-    assert_equal(p_uri, p.to_uri)
+    assert_equal('/123+abc+ABC', p.to_uri)
     assert_equal(1, p.nodes.size)
-    assert_equal('123 abc+ABC', p.nodes[0])
+    assert_equal('123+abc+ABC', p.nodes[0])
 
     p_uri = '/foo-1/bar-abc%40xyz/baz-123%20%00%2B789%25ff'
     p = UCP.new(p_uri)
-    assert_equal('/foo-1/bar-abc%40xyz/baz-123+%00%2B789%25ff', p.to_uri)
+    assert_equal('/foo-1/bar-abc@xyz/baz-123%20%00+789%25ff', p.to_uri)
     assert_equal(3, p.nodes.size)
     assert_equal('foo-1', p.nodes[0])
     assert_equal('bar-abc@xyz', p.nodes[1])
@@ -91,16 +91,16 @@ class TestPathClass < Test::Unit::TestCase
 
     p = UCP.new('')
     p.nodes << '123 abc'
-    assert_equal('/123+abc', p.to_uri)
+    assert_equal('/123%20abc', p.to_uri)
 
     p = UCP.new('')
     p.nodes << '123+abc'
-    assert_equal('/123%2Babc', p.to_uri)
+    assert_equal('/123+abc', p.to_uri)
 
     p = UCP.new('')
     p.nodes << 'abc@xyz'
     p.nodes << "123 \x00+789%ff"
-    assert_equal('/abc%40xyz/123+%00%2B789%25ff', p.to_uri)
+    assert_equal('/abc@xyz/123%20%00+789%25ff', p.to_uri)
   end
 
   def test_normalize
@@ -142,8 +142,8 @@ class TestPathClass < Test::Unit::TestCase
     assert_kind_of(URI::HTTPS, u)
     assert_kind_of(UCP, p)
     assert_equal(u_uri, u.to_s)
-    assert_equal('/abc%40xyz/123+%00%2B789%25ff', u.path)
-    assert_equal('/abc%40xyz/123+%00%2B789%25ff', p.to_s)
+    assert_equal('/abc@xyz/123+%00+789%25ff', u.path)
+    assert_equal('/abc@xyz/123+%00+789%25ff', p.to_s)
 
     u_uri.sub!(/^https:/, 'http:')
     u = URI.parse(u_uri)
@@ -151,14 +151,14 @@ class TestPathClass < Test::Unit::TestCase
       u.path_component
     end
 
-    UCP.mixin
+    UCP.mixin(URI::HTTP)
     u = URI.parse(u_uri)
     p = u.path_component
     assert_kind_of(URI::HTTP, u)
     assert_kind_of(UCP, u.path_component)
     assert_equal(u_uri, u.to_s)
-    assert_equal('/abc%40xyz/123+%00%2B789%25ff', u.path)
-    assert_equal('/abc%40xyz/123+%00%2B789%25ff', p.to_s)
+    assert_equal('/abc@xyz/123+%00+789%25ff', u.path)
+    assert_equal('/abc@xyz/123+%00+789%25ff', p.to_s)
   end
 end
 
