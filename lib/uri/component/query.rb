@@ -10,6 +10,73 @@ require 'cgi'
 
 module URI
   module Component
+    class QueryParamHash < Hash #:nodoc:
+      def convert_key(key)
+        return key.kind_of?(String) ? key : key.to_s
+      end
+      def [](key)
+        super(self.convert_key(key))
+      end
+      def fetch(key, default = nil)
+        super(self.convert_key(key), default)
+      end
+
+      def values(key = nil)
+        return key ? self[key] : super
+      end
+
+      def value(key)
+        return self[key][0]
+      end
+
+      def values_at(*keys)
+        super(*keys.map {|key| self.convert_key(key)})
+      end
+
+      def []=(key, values)
+        values = [values] unless values.kind_of?(Array)
+        super(self.convert_key(key), values)
+      end
+      def store(key, values)
+        self[key] = values
+      end
+
+      def delete(key)
+        super(self.convert_key(key))
+      end
+
+      def has_key?(key)
+        super(self.convert_key(key))
+      end
+      alias :include? :has_key?
+      alias :key? :has_key?
+      alias :member? :has_key?
+
+      def merge(hash)
+        hash_new = self.class.new
+        hash.each do |key, value|
+          hash_new[key] = value
+        end
+        return hash_new
+      end
+
+      def merge!(hash)
+        hash.each do |key, value|
+          self[key] = value
+        end
+        return self
+      end
+      alias :update :merge!
+
+      def replace(hash)
+        self.clear
+        hash.each do |key, value|
+          self[key] = value
+        end
+        return self
+      end
+    end
+
     ## Handle a query component in an URI as an object
     class Query
       #:stopdoc:
@@ -26,7 +93,7 @@ module URI
 	  raise InvalidURIError, "bad Query component for URI: #{query_str}"
 	end
 
-	@params = {}
+	@params = QueryParamHash.new
 	@params.default_proc = Proc.new {|hash, key|
 	  hash[key] = [] unless hash.key?(key)
 	}
