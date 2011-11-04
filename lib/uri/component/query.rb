@@ -25,8 +25,16 @@ module URI
         return key ? self[key] : super
       end
 
+      def values=(key, values)
+        self[key] = values
+      end
+
       def value(key)
         return self[key][0]
+      end
+
+      def value=(key, value)
+        self[key] = value
       end
 
       def values_at(*keys)
