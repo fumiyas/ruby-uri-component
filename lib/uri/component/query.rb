@@ -13,9 +13,9 @@ module URI
     class Query
       RE_COMPONENT = /^#{URI::REGEXP::PATTERN::QUERY}?$/
 
-      def self.mixin(c=URI::Generic)
-	QueryMixin.__send__(:append_features, c)
-	QueryMixin.__send__(:included, c)
+      def self.mixin(klass)
+	QueryMixin.__send__(:append_features, klass)
+	QueryMixin.__send__(:included, klass)
       end
 
       def initialize(query_str='')

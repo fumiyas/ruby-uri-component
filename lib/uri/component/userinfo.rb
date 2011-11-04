@@ -20,9 +20,9 @@ module URI
       RE_COMPONENT = /^(?:(#{RE_PART});)?(#{RE_PART})(?::(#{RE_PART}))?$/
       #:startdoc:
 
-      def self.mixin(c=URI::Generic)
-	UserInfoMixin.__send__(:append_features, c)
-	UserInfoMixin.__send__(:included, c)
+      def self.mixin(klass)
+	UserInfoMixin.__send__(:append_features, klass)
+	UserInfoMixin.__send__(:included, klass)
       end
 
       def self.escape(v)

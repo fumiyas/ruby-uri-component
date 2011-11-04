@@ -138,9 +138,16 @@ class TestUserInfoClass < Test::Unit::TestCase
       u.userinfo_component
     end
 
-    UCUI.mixin
+    UCUI.mixin(URI::HTTP)
     u = URI.parse(u_uri)
-    assert_kind_of(UCUI, u.userinfo_component)
+    i = u.userinfo_component
+    assert_kind_of(UCUI, i)
+    assert_equal('user%20name:p%40ssword', u.userinfo)
+    assert_equal('user%20name', u.user)
+    assert_equal('user name', i.user)
+    assert_equal('p%40ssword', u.password)
+    assert_equal('p@ssword', i.password)
+    assert_nil(i.domain)
   end
 end
 

@@ -21,9 +21,9 @@ module URI
       RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::ABS_PATH})?$/
       #:startdoc:
 
-      def self.mixin(c=URI::Generic)
-	PathMixin.__send__(:append_features, c)
-	PathMixin.__send__(:included, c)
+      def self.mixin(klass)
+	PathMixin.__send__(:append_features, klass)
+	PathMixin.__send__(:included, klass)
       end
 
       def initialize(path_str='')

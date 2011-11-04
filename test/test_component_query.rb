@@ -157,9 +157,13 @@ class TestQueryClass < Test::Unit::TestCase
       u.query_component
     end
 
-    UCQ.mixin
+    UCQ.mixin(URI::HTTP)
     u = URI.parse(u_uri)
-    assert_kind_of(UCQ, u.query_component)
+    q = u.query_component
+    assert_kind_of(UCQ, q)
+    assert_equal(u_uri, u.to_s)
+    assert_equal('foo=123%40example&bar=abc+xyz', u.query)
+    assert_equal('foo=123%40example&bar=abc+xyz', q.to_s)
   end
 end
 
