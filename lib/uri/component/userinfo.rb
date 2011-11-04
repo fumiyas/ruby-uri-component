@@ -26,7 +26,7 @@ module URI
 	UserInfoMixin.__send__(:included, klass)
       end
 
-      def self.escape(v)
+      def escape(v)
 	return URI.escape(v, RE_UNSAFE)
       end
 
@@ -80,9 +80,9 @@ module URI
 	return nil unless @user
 
 	info_str = ''
-	info_str += self.class.escape(@domain) + ';' if @domain
-	info_str += @user ? self.class.escape(@user) : '';
-	info_str += ':' + self.class.escape(@password) if @password
+	info_str += self.escape(@domain) + ';' if @domain
+	info_str += @user ? self.escape(@user) : '';
+	info_str += ':' + self.escape(@password) if @password
 	return info_str
       end
       alias to_s to_uri
@@ -113,8 +113,8 @@ module URI
 	return nil unless user
 
 	domain = @userinfo_component.domain
-	user_uri = domain ? URI::Component::UserInfo.escape(domain) + ';' : ''
-	user_uri += URI::Component::UserInfo.escape(user)
+	user_uri = domain ? @userinfo_component.escape(domain) + ';' : ''
+	user_uri += @userinfo_component.escape(user)
 	return user_uri
       end
 
@@ -130,7 +130,7 @@ module URI
 
       def password
 	pass = @userinfo_component.password
-	return pass ? URI::Component::UserInfo.escape(pass) : nil
+	return pass ? @userinfo_component.escape(pass) : nil
       end
 
       def password=(pass_uri)

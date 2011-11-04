@@ -41,10 +41,14 @@ module URI
 	end
       end
 
+      def escape(v)
+        return URI.escape(v, RE_UNSAFE)
+      end
+
       def to_uri
 	return '' if @nodes.empty?
 	return '/' + @nodes.map do |node|
-	  URI.escape(node, RE_UNSAFE)
+	  self.escape(node)
 	end.join('/')
       end
       alias to_s to_uri
