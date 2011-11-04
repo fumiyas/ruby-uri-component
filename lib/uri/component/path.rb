@@ -86,7 +86,7 @@ module URI
       end
 
       def path
-	@path_component.to_uri
+	return @path_component ? @path_component.to_uri : @path
       end
 
       def path=(path_str)
@@ -101,6 +101,15 @@ module URI
 	return @path_component
       end
       alias path_c path_component
+
+      def path_query
+        str = self.path
+        if query = self.query
+          str += '?' + query
+        end
+        return str
+      end
+      private :path_query
 
       protected
 

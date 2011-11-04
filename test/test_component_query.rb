@@ -144,14 +144,21 @@ class TestQueryClass < Test::Unit::TestCase
     UCQ.mixin(URI::HTTPS)
 
     u_uri = 'https://example.jp/?foo=123%40example&bar=abc%20xyz'
+    u_uri_x = u_uri.gsub('+', '%2B').gsub('%20', '+')
     u = URI.parse(u_uri)
     q = u.query_component
     assert_kind_of(UCQ, q)
-    assert_equal(u_uri, u.to_s)
+    assert_equal(u_uri_x, u.to_s)
     assert_equal('foo=123%40example&bar=abc+xyz', u.query)
     assert_equal('foo=123%40example&bar=abc+xyz', q.to_s)
 
+    q.params['baz'] = ['xxx']
+    assert_equal(u_uri_x + '&baz=xxx', u.to_s)
+    assert_equal('foo=123%40example&bar=abc+xyz&baz=xxx', u.query)
+    assert_equal('foo=123%40example&bar=abc+xyz&baz=xxx', q.to_s)
+
     u_uri.sub!(/^https:/, 'http:')
+    u_uri_x = u_uri.gsub('+', '%2B').gsub('%20', '+')
     u = URI.parse(u_uri)
     assert_raise(NoMethodError) do
       u.query_component
@@ -161,7 +168,7 @@ class TestQueryClass < Test::Unit::TestCase
     u = URI.parse(u_uri)
     q = u.query_component
     assert_kind_of(UCQ, q)
-    assert_equal(u_uri, u.to_s)
+    assert_equal(u_uri_x, u.to_s)
     assert_equal('foo=123%40example&bar=abc+xyz', u.query)
     assert_equal('foo=123%40example&bar=abc+xyz', q.to_s)
   end

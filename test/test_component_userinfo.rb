@@ -132,6 +132,8 @@ class TestUserInfoClass < Test::Unit::TestCase
     assert_equal('domain', i.domain)
     assert_equal('user;name', i.user)
 
+    assert_equal('https://domain;user%3Bname:pass%2Fword@example.jp/', u.to_s)
+
     u_uri.sub!(/^https:/, 'http:')
     u = URI.parse(u_uri)
     assert_raise(NoMethodError) do

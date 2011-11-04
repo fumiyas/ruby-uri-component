@@ -76,7 +76,7 @@ module URI
       end
 
       def query
-	@query_component.to_uri
+	return @query_component ? @query_component.to_uri : @query
       end
 
       def query=(query_str)
@@ -91,6 +91,15 @@ module URI
 	return @query_component
       end
       alias query_c query_component
+
+      def path_query
+        str = self.path
+        if query = self.query
+          str += '?' + query
+        end
+        return str
+      end
+      private :path_query
 
       protected
 

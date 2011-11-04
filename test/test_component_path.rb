@@ -137,15 +137,22 @@ class TestPathClass < Test::Unit::TestCase
     UCP.mixin(URI::HTTPS)
 
     u_uri = 'https://example.jp/abc%40xyz/123+%00%2B789%25ff'
+    u_uri_x = u_uri.gsub('%40','@').gsub('%2B', '+')
     u = URI.parse(u_uri)
     p = u.path_component
     assert_kind_of(URI::HTTPS, u)
     assert_kind_of(UCP, p)
-    assert_equal(u_uri, u.to_s)
+    assert_equal(u_uri_x, u.to_s)
     assert_equal('/abc@xyz/123+%00+789%25ff', u.path)
     assert_equal('/abc@xyz/123+%00+789%25ff', p.to_s)
 
+    p.nodes << 'xxx'
+    assert_equal(u_uri_x + '/xxx', u.to_s)
+    assert_equal('/abc@xyz/123+%00+789%25ff/xxx', u.path)
+    assert_equal('/abc@xyz/123+%00+789%25ff/xxx', p.to_s)
+
     u_uri.sub!(/^https:/, 'http:')
+    u_uri_x = u_uri.gsub('%40','@').gsub('%2B', '+')
     u = URI.parse(u_uri)
     assert_raise(NoMethodError) do
       u.path_component
@@ -156,7 +163,7 @@ class TestPathClass < Test::Unit::TestCase
     p = u.path_component
     assert_kind_of(URI::HTTP, u)
     assert_kind_of(UCP, u.path_component)
-    assert_equal(u_uri, u.to_s)
+    assert_equal(u_uri_x, u.to_s)
     assert_equal('/abc@xyz/123+%00+789%25ff', u.path)
     assert_equal('/abc@xyz/123+%00+789%25ff', p.to_s)
   end
