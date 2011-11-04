@@ -10,10 +10,13 @@ require 'cgi'
 
 module URI
   module Component
+    ## Handle a query component in an URI as an object
     class Query
+      #:stopdoc:
       RE_COMPONENT = /^#{URI::REGEXP::PATTERN::QUERY}?$/
+      #:startdoc:
 
-      def self.mixin(klass)
+      def self.mixin(klass) #:nodoc:
 	QueryMixin.__send__(:append_features, klass)
 	QueryMixin.__send__(:included, klass)
       end

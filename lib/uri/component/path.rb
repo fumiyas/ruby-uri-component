@@ -9,7 +9,7 @@ require 'uri'
 
 module URI
   module Component
-    ## Class to handle a path component in an URI
+    ## Handle a path component in an URI as an object
     class Path
       #:stopdoc:
       ## Same as URI::UNSAFE, plus ';' (separator for path nodes)
@@ -21,7 +21,7 @@ module URI
       RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::ABS_PATH})?$/
       #:startdoc:
 
-      def self.mixin(klass)
+      def self.mixin(klass) #:nodoc:
 	PathMixin.__send__(:append_features, klass)
 	PathMixin.__send__(:included, klass)
       end

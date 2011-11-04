@@ -9,6 +9,7 @@ require 'uri'
 
 module URI
   module Component
+    ## Handle an userinfo component in an URI as an object
     class UserInfo
       #:stopdoc:
       RE_UNSAFE = /[^#{URI::REGEXP::PATTERN::UNRESERVED}]/
@@ -20,7 +21,7 @@ module URI
       RE_COMPONENT = /^(?:(#{RE_PART});)?(#{RE_PART})(?::(#{RE_PART}))?$/
       #:startdoc:
 
-      def self.mixin(klass)
+      def self.mixin(klass) #:nodoc:
 	UserInfoMixin.__send__(:append_features, klass)
 	UserInfoMixin.__send__(:included, klass)
       end

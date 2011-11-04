@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["fumiyas@osstech.co.jp"]
   s.homepage    = "https://github.com/fumiyas/ruby-uri-component"
   s.summary     = %q{URI::Component::* classes}
-  s.description = %q{Handle the components of the URI as an object}
+  s.description = %q{Handle URI components as an object}
 
   s.rubyforge_project = "uri-component"
 
