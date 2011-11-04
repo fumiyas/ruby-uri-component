@@ -10,7 +10,7 @@ require 'cgi'
 
 module URI
   module Component
-    class QueryParamHash < Hash #:nodoc:
+    class QueryParamsHash < Hash #:nodoc:
       def convert_key(key)
         return key.kind_of?(String) ? key : key.to_s
       end
@@ -93,7 +93,7 @@ module URI
 	  raise InvalidURIError, "bad Query component for URI: #{query_str}"
 	end
 
-	@params = QueryParamHash.new
+	@params = QueryParamsHash.new
 	@params.default_proc = Proc.new {|hash, key|
 	  hash[key] = [] unless hash.key?(key)
 	}
