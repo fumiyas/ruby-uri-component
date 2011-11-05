@@ -6,7 +6,7 @@ UCP = URI::Component::Path
 module URI
 module Component
 
-class TestPathClass < Test::Unit::TestCase
+class PathTest < Test::Unit::TestCase
   def setup
   end
 

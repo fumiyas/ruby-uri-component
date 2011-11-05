@@ -6,7 +6,7 @@ UCQ = URI::Component::Query
 module URI
 module Component
 
-class TestQueryClass < Test::Unit::TestCase
+class QueryTest < Test::Unit::TestCase
   def setup
   end
 

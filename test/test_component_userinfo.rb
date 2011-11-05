@@ -6,7 +6,7 @@ UCUI = URI::Component::UserInfo
 module URI
 module Component
 
-class TestUserInfoClass < Test::Unit::TestCase
+class UserInfoTest < Test::Unit::TestCase
   def setup
   end
 
