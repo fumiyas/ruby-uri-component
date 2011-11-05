@@ -1,6 +1,6 @@
 module URI
   module Component
-    VERSION = "0.0.2" ## :nodoc:
+    VERSION = "0.0.3" ## :nodoc:
   end
 end
 
