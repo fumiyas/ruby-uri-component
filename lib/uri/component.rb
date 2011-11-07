@@ -1,10 +1,21 @@
+## = uri/component.rb
+##
+## Ruby URI::Component module
+##
+## Author:: SATOH Fumiyasu
+## Copyright:: (c) 2007-2011 SATOH Fumiyasu @ OSS Technology, Corp.
+## License:: You can redistribute it and/or modify it under the same term as Ruby.
+##
+
 require "uri/component/userinfo"
 require "uri/component/path"
 require "uri/component/query"
 
-module URI
+module URI #:nodoc:
   ## Handle URI components as an object
   module Component
+    ## == Description
+    ##
     ## Add the following instance methods to the class +klass+:
     ##
     ## userinfo_component::
@@ -15,7 +26,7 @@ module URI
     ## query_component::
     ##   Returns the query component of the URI as URI::Component::Query object.
     ##
-    ## Usage:
+    ## == Example
     ##
     ##   require "uri"
     ##   require "uri/component"

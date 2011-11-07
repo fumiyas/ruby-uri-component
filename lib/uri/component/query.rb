@@ -8,7 +8,7 @@
 require 'uri'
 require 'cgi'
 
-module URI
+module URI #:nodoc:
   module Component
     class QueryParamsHash < Hash #:nodoc:
       def convert_key(key)
@@ -144,7 +144,7 @@ module URI
       alias to_s to_uri
     end
 
-    module QueryMixin
+    module QueryMixin #:nodoc:
       def initialize_copy(uri)
 	if (query = uri.instance_variable_get('@query_component'))
 	  @query_component = query.dup

@@ -7,7 +7,7 @@
 
 require 'uri'
 
-module URI
+module URI #:nodoc:
   module Component
     ## Handle an userinfo component in an URI as an object
     class UserInfo
@@ -88,7 +88,7 @@ module URI
       alias to_s to_uri
     end
 
-    module UserInfoMixin
+    module UserInfoMixin #:nodoc:
       def initialize_copy(uri)
 	if (userinfo = uri.instance_variable_get('@userinfo_component'))
 	  @userinfo_component = userinfo.dup

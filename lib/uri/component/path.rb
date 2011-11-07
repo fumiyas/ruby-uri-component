@@ -7,7 +7,7 @@
 
 require 'uri'
 
-module URI
+module URI #:nodoc:
   module Component
     ## Handle a path component in an URI as an object
     class Path
@@ -80,7 +80,7 @@ module URI
       end
     end
 
-    module PathMixin
+    module PathMixin #:nodoc:
       def initialize_copy(uri)
 	if (path = uri.instance_variable_get('@path_component'))
 	  @path_component = path.dup
