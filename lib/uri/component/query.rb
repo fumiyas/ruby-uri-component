@@ -10,49 +10,85 @@ require 'cgi'
 
 module URI #:nodoc:
   module Component
-    class QueryParamsHash < Hash #:nodoc:
-      def convert_key(key)
+    ## Handle query parameters for the URI as a hash
+    ##
+    ## == Example
+    ##
+    ##   require "uri/component/query"
+    ##
+    ##   query = URI::Component::Query.new('foo=123&bar=x+y&bar=%40example')
+    ##   params = query.params
+    ##   #=> #<URI::Component::QueryParamsHash: {"foo"=>["123"], "bar"=>["x y", "@example"]}>
+    ##
+    ##   p params['foo']
+    ##   #=> ["123"]
+    ##   p params[:foo]
+    ##   #=> ["123"]
+    ##   p params.values(:foo)
+    ##   #=> ["123"]
+    ##   p params.value(:foo)
+    ##   #=> "123"
+    ##
+    ##   p params['bar']
+    ##   #=> ["x y", "@example"]
+    ##   p params[:bar]
+    ##   #=> ["x y", "@example"]
+    ##   p params.values(:bar)
+    ##   #=> ["x y", "@example"]
+    ##   p params.value(:bar)
+    ##   #=> "x y"
+    ##
+    ##   params[:foo] = [1, 2, 3]
+    ##   #=> [1, 2, 3]
+    ##   params[:bar] = 'baz@baz.example.jp'
+    ##   #=> ["baz@baz.example.jp"]
+    ##   p query.to_uri
+    ##   #=> "foo=1&foo=2&foo=3&bar=baz%40example.jp"
+    class QueryParamsHash < Hash
+      def convert_key(key) #:nodoc:
         return key.kind_of?(String) ? key : key.to_s
       end
-      def [](key)
+      def [](key) #:nodoc:
         super(self.convert_key(key))
       end
-      def fetch(key, default = nil)
+      def fetch(key, default = nil) #:nodoc:
         super(self.convert_key(key), default)
       end
 
+      ## Returns an array of values from the hash for the given key.
       def values(key)
         return self[key]
       end
 
+      ## Returns a value from the hash for the given key.
       def value(key)
         return self[key][0]
       end
 
-      def values_at(*keys)
+      def values_at(*keys) #:nodoc:
         super(*keys.map {|key| self.convert_key(key)})
       end
 
-      def []=(key, values)
+      def []=(key, values) #:nodoc:
         values = [values] unless values.kind_of?(Array)
         super(self.convert_key(key), values)
       end
-      def store(key, values)
+      def store(key, values) #:nodoc:
         self[key] = values
       end
 
-      def delete(key)
+      def delete(key) #:nodoc:
         super(self.convert_key(key))
       end
 
-      def has_key?(key)
+      def has_key?(key) #:nodoc:
         super(self.convert_key(key))
       end
       alias :include? :has_key?
       alias :key? :has_key?
       alias :member? :has_key?
 
-      def merge(hash)
+      def merge(hash) #:nodoc:
         hash_new = self.class.new
         hash.each do |key, value|
           hash_new[key] = value
@@ -60,7 +96,7 @@ module URI #:nodoc:
         return hash_new
       end
 
-      def merge!(hash)
+      def merge!(hash) #:nodoc:
         hash.each do |key, value|
           self[key] = value
         end
@@ -68,7 +104,7 @@ module URI #:nodoc:
       end
       alias :update :merge!
 
-      def replace(hash)
+      def replace(hash) #:nodoc:
         self.clear
         hash.each do |key, value|
           self[key] = value
@@ -82,6 +118,8 @@ module URI #:nodoc:
       #:stopdoc:
       RE_COMPONENT = /^#{URI::REGEXP::PATTERN::QUERY}?$/
       #:startdoc:
+
+      DEFAULT_PARAM_SEPARATOR = '&'
 
       def self.mixin(klass) #:nodoc:
 	QueryMixin.__send__(:append_features, klass)
@@ -97,7 +135,7 @@ module URI #:nodoc:
 	@params.default_proc = Proc.new {|hash, key|
 	  hash[key] = [] unless hash.key?(key)
 	}
-	@param_separator = '&'
+	@param_separator = DEFAULT_PARAM_SEPARATOR
 
 	query_str.split(/[&;]/).each do |param|
 	  next if param.empty?
@@ -109,6 +147,7 @@ module URI #:nodoc:
 	end
       end
 
+      ## Returns query parameters as an URI::Component::QueryParamsHash object
       def params
 	return @params
       end
