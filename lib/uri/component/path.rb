@@ -14,7 +14,7 @@ module URI #:nodoc:
       #:stopdoc:
       ## Same as URI::UNSAFE, plus '/' (separator for path nodes)
       ## and '?' (separator for path and query)
-      RE_UNSAFE = /
+      RE_NODE_UNSAFE = /
         [^#{URI::REGEXP::PATTERN::UNRESERVED}#{URI::REGEXP::PATTERN::RESERVED}]|
         [\/?]
       /x
@@ -41,14 +41,14 @@ module URI #:nodoc:
 	end
       end
 
-      def escape(v)
-        return URI.escape(v, RE_UNSAFE)
+      def escape_node(v)
+        return URI.escape(v, RE_NODE_UNSAFE)
       end
 
       def to_uri
 	return '' if @nodes.empty?
 	return '/' + @nodes.map do |node|
-	  self.escape(node)
+	  self.escape_node(node)
 	end.join('/')
       end
       alias to_s to_uri

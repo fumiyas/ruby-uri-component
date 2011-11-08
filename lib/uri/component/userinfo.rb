@@ -12,13 +12,13 @@ module URI #:nodoc:
     ## Handle an userinfo component in an URI as an object
     class UserInfo
       #:stopdoc:
-      RE_UNSAFE = /[^#{URI::REGEXP::PATTERN::UNRESERVED}]/
+      RE_ELEMENT_UNSAFE = /[^#{URI::REGEXP::PATTERN::UNRESERVED}]/
       ## Same as URI::USERINFO, except ';' and ':'
-      RE_PART = /(?:
+      RE_ELEMENT = /(?:
         [#{URI::REGEXP::PATTERN::UNRESERVED}&=+$,]|
         #{URI::REGEXP::PATTERN::ESCAPED})*
       /x
-      RE_COMPONENT = /^(?:(#{RE_PART});)?(#{RE_PART})(?::(#{RE_PART}))?$/
+      RE_COMPONENT = /^(?:(#{RE_ELEMENT});)?(#{RE_ELEMENT})(?::(#{RE_ELEMENT}))?$/
       #:startdoc:
 
       def self.mixin(klass) #:nodoc:
@@ -26,8 +26,8 @@ module URI #:nodoc:
 	UserInfoMixin.__send__(:included, klass)
       end
 
-      def escape(v)
-	return URI.escape(v, RE_UNSAFE)
+      def escape_element(v)
+	return URI.escape(v, RE_ELEMENT_UNSAFE)
       end
 
       def initialize(info_str=nil)
@@ -80,9 +80,9 @@ module URI #:nodoc:
 	return nil unless @user
 
 	info_str = ''
-	info_str += self.escape(@domain) + ';' if @domain
-	info_str += @user ? self.escape(@user) : '';
-	info_str += ':' + self.escape(@password) if @password
+	info_str += self.escape_element(@domain) + ';' if @domain
+	info_str += @user ? self.escape_element(@user) : '';
+	info_str += ':' + self.escape_element(@password) if @password
 	return info_str
       end
       alias to_s to_uri
@@ -113,8 +113,8 @@ module URI #:nodoc:
 	return nil unless user
 
 	domain = @userinfo_component.domain
-	user_uri = domain ? @userinfo_component.escape(domain) + ';' : ''
-	user_uri += @userinfo_component.escape(user)
+	user_uri = domain ? @userinfo_component.escape_element(domain) + ';' : ''
+	user_uri += @userinfo_component.escape_element(user)
 	return user_uri
       end
 
@@ -130,7 +130,7 @@ module URI #:nodoc:
 
       def password
 	pass = @userinfo_component.password
-	return pass ? @userinfo_component.escape(pass) : nil
+	return pass ? @userinfo_component.escape_element(pass) : nil
       end
 
       def password=(pass_uri)
