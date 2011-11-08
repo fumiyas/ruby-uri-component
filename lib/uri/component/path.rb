@@ -12,7 +12,7 @@ module URI #:nodoc:
     ## Handle a path component in an URI as an object
     class Path
       #:stopdoc:
-      ## Same as URI::UNSAFE, plus ';' (separator for path nodes)
+      ## Same as URI::UNSAFE, plus '/' (separator for path nodes)
       ## and '?' (separator for path and query)
       RE_UNSAFE = /
         [^#{URI::REGEXP::PATTERN::UNRESERVED}#{URI::REGEXP::PATTERN::RESERVED}]|
