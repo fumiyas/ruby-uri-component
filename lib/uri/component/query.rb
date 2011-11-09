@@ -147,6 +147,10 @@ module URI #:nodoc:
 	end
       end
 
+      def [](key)
+	return @params[key]
+      end
+
       ## Returns query parameters as an URI::Component::QueryParamsHash object
       def params
 	return @params

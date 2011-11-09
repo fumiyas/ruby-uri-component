@@ -53,6 +53,10 @@ module URI #:nodoc:
       end
       alias to_s to_uri
 
+      def [](*index)
+        return @nodes[*index]
+      end
+
       def nodes
 	return @nodes
       end

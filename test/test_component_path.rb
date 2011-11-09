@@ -36,6 +36,9 @@ class PathTest < Test::Unit::TestCase
     assert_equal(p_uri, p.to_uri)
     assert_equal(2, p.nodes.size)
     assert_equal('foo', p.nodes[0])
+    assert_equal('foo', p[0])
+    assert_empty(p.nodes[1])
+    assert_empty(p[1])
 
     p_uri = '/123%20abc'
     p = UCP.new(p_uri)
