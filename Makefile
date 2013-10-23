@@ -1,18 +1,19 @@
-default: build
+RAKE=		rake
+GEM=		gem
 
-build: gem
+test t: PHONY
+	$(RAKE) test
 
-gem:
-	rm pkg/*.gem
-	rake build
+gem: PHONY
+	$(RAKE) build
 
-upload:
+upload: PHONY
+	$(RM) pkg/*.gem
 	$(MAKE) gem
-	gem push pkg/*.gem
+	$(GEM) push pkg/*.gem
 
-clean:
-	rake clean
+install: PHONY
+	$(RAKE) install
 
-distclean:
-	rake clobber
+PHONY:
 
