@@ -45,6 +45,24 @@ module URI #:nodoc:
     ##   p query.to_uri
     ##   #=> "foo=1&foo=2&foo=3&bar=baz%40example.jp"
     class QueryParamsHash < Hash
+      def initialize
+	super
+	@nil = true
+      end
+
+      def clear
+	super
+	@nil = true
+      end
+
+      def nil=(flag)
+	@nil = flag
+      end
+
+      def nil?
+	return !@nil
+      end
+
       def convert_key(key) #:nodoc:
         return key.kind_of?(String) ? key : key.to_s
       end
@@ -70,10 +88,12 @@ module URI #:nodoc:
       end
 
       def []=(key, values) #:nodoc:
+	@nil = false
         values = [values] unless values.kind_of?(Array)
         super(self.convert_key(key), values)
       end
       def store(key, values) #:nodoc:
+	@nil = false
         self[key] = values
       end
 
@@ -126,22 +146,29 @@ module URI #:nodoc:
 	QueryMixin.__send__(:included, klass)
       end
 
-      def initialize(query_str='')
-	unless query_str =~ RE_COMPONENT
+      def initialize(query_str=nil)
+	unless !query_str || query_str =~ RE_COMPONENT
 	  raise InvalidURIError, "bad Query component for URI: #{query_str}"
 	end
 
 	@params = QueryParamsHash.new
 	@param_separator = DEFAULT_PARAM_SEPARATOR
 
-	query_str.split(/[&;]/).each do |param|
-	  next if param.empty?
-	  name, value = param.split('=', 2).map do |v|
-	    CGI.unescape(v)
+	if query_str
+	  @params.nil = false
+	  query_str.split(/[&;]/).each do |param|
+	    next if param.nil?
+	    name, value = param.split('=', 2).map do |v|
+	      CGI.unescape(v)
+	    end
+	    @params[name] ||= []
+	    @params[name] << value ? value : nil
 	  end
-	  @params[name] ||= []
-	  @params[name] << value ? value : nil
 	end
+      end
+
+      def clear
+	@params.clear
       end
 
       def [](key)
@@ -162,6 +189,8 @@ module URI #:nodoc:
       end
 
       def to_uri(separator=@param_separator)
+	return nil unless @params.nil?
+
 	query = []
 
 	@params.each do |name, values|

@@ -14,6 +14,10 @@ class QueryTest < Test::Unit::TestCase
   end
 
   def test_parse
+    q_uri = nil
+    q = UCQ.new(q_uri)
+    assert_equal(q_uri, q.to_uri)
+
     q_uri = ''
     q = UCQ.new(q_uri)
     assert_equal(q_uri, q.to_uri)
@@ -100,6 +104,15 @@ class QueryTest < Test::Unit::TestCase
   end
 
   def test_set
+    q = UCQ.new()
+    assert_nil(q.to_uri)
+    q.params['foo'] = [1]
+    assert_equal('foo=1', q.to_uri)
+    q.params['foo'] = []
+    assert_equal('', q.to_uri)
+    q.params.clear
+    assert_nil(q.to_uri)
+
     q = UCQ.new('')
     q.params['foo'] = [1]
     assert_equal('foo=1', q.to_uri)
@@ -142,6 +155,23 @@ class QueryTest < Test::Unit::TestCase
 
   def test_mixin
     UCQ.mixin(URI::HTTPS)
+
+    u_uri = 'https://example.jp/'
+    u = URI.parse(u_uri)
+    assert_equal(u_uri, u.to_s)
+    assert_nil(u.query)
+    q = u.query_component
+    assert_kind_of(UCQ, q)
+    assert_nil(q.to_s)
+    q.params['foo'] = [1]
+    assert_equal('foo=1', u.query)
+    assert_equal(u_uri + '?foo=1', u.to_s)
+    q.params['foo'] = []
+    assert_equal('', u.query)
+    assert_equal(u_uri + '?', u.to_s)
+    q.clear
+    assert_nil(q.to_s)
+    assert_equal(u_uri, u.to_s)
 
     u_uri = 'https://example.jp/?foo=123%40example&bar=abc%20xyz'
     u_uri_x = u_uri.gsub('+', '%2B').gsub('%20', '+')
