@@ -132,9 +132,6 @@ module URI #:nodoc:
 	end
 
 	@params = QueryParamsHash.new
-	@params.default_proc = Proc.new {|hash, key|
-	  hash[key] = [] unless hash.key?(key)
-	}
 	@param_separator = DEFAULT_PARAM_SEPARATOR
 
 	query_str.split(/[&;]/).each do |param|
