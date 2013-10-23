@@ -98,7 +98,7 @@ module URI #:nodoc:
       end
 
       def userinfo
-	@userinfo_component.to_uri
+	return @userinfo_component ? @userinfo_component.to_uri : nil
       end
 
       def userinfo=(info_str)

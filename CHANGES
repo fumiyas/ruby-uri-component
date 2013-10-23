@@ -1,3 +1,4 @@
 Ruby URI::Conponent 0.0.5 (2013-10-23)
   * ::Query.new: Support nil (not empty) query string
+  * ::UserInfoMixin#userinfo: Return nil if @userinfo_component is not set
 

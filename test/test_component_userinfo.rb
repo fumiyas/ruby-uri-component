@@ -103,6 +103,20 @@ class UserInfoTest < Test::Unit::TestCase
   def test_mixin
     UCUI.mixin(URI::HTTPS)
 
+    u_uri = 'https://example.jp/'
+    u = URI.parse(u_uri)
+    assert_equal(u_uri, u.to_s)
+    assert_nil(u.userinfo)
+    i = u.userinfo_component
+    assert_kind_of(UCUI, i)
+    assert_nil(i.to_s)
+    i.user = 'user'
+    assert_equal(u_uri.sub('//', '//user@'), u.to_s)
+    assert_equal('user', i.to_s)
+    i.user = nil
+    assert_equal(u_uri, u.to_s)
+    assert_nil(u.userinfo)
+
     u_uri = 'https://user%20name:p%40ssword@example.jp/'
     u = URI.parse(u_uri)
     i = u.userinfo_component
