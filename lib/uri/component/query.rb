@@ -141,7 +141,7 @@ module URI #:nodoc:
 
       DEFAULT_PARAM_SEPARATOR = '&'
 
-      def self.mixin(klass) #:nodoc:
+      def self.mixin(klass=URI::Generic) #:nodoc:
 	QueryMixin.__send__(:append_features, klass)
 	QueryMixin.__send__(:included, klass)
       end

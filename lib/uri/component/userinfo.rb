@@ -21,7 +21,7 @@ module URI #:nodoc:
       RE_COMPONENT = /^(?:(#{RE_ELEMENT});)?(#{RE_ELEMENT})(?::(#{RE_ELEMENT}))?$/
       #:startdoc:
 
-      def self.mixin(klass) #:nodoc:
+      def self.mixin(klass=URI::Generic) #:nodoc:
 	UserInfoMixin.__send__(:append_features, klass)
 	UserInfoMixin.__send__(:included, klass)
       end

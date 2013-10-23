@@ -21,7 +21,7 @@ module URI #:nodoc:
       RE_COMPONENT = /^(?:#{URI::REGEXP::PATTERN::ABS_PATH})?$/
       #:startdoc:
 
-      def self.mixin(klass) #:nodoc:
+      def self.mixin(klass=URI::Generic) #:nodoc:
 	PathMixin.__send__(:append_features, klass)
 	PathMixin.__send__(:included, klass)
       end

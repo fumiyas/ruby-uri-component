@@ -46,7 +46,7 @@ module URI #:nodoc:
     ##   p q.to_s #=> "foo=12&bar=ab&baz=x+y+z"
     ##   p u.to_s #=> "http://bob@example.jp/path/file?foo=12&bar=ab&baz=x+y+z"
     ##
-    def self.mixin(klass)
+    def self.mixin(klass=URI::Generic)
       URI::Component::UserInfo.mixin(klass) if klass.component.include?(:userinfo)
       URI::Component::Path.mixin(klass) if klass.component.include?(:path)
       URI::Component::Query.mixin(klass) if klass.component.include?(:query)
